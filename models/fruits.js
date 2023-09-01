@@ -16,4 +16,5 @@ const fruits = [
     }
   ];
   
+//   export fruits.js from models folder to import it into server.js
   module.exports = fruits
