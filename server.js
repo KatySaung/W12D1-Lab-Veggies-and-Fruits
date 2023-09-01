@@ -6,6 +6,10 @@ const fruits = require("./models/fruits")
 const vegetables = require("./models/vegetables")
 const jsxViewEngine = require('jsx-view-engine');
 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////NEED TO STILL CREATE GITHUB REPO!(Multiple parts to assignment/////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
 //  line 10 :app.set('view engine', 'jsx') is one line of code that make app able to use jsx engine
 app.set('view engine', 'jsx')
 app.set("views", './views');
