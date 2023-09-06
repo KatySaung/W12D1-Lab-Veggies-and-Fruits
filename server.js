@@ -4,6 +4,8 @@ const PORT = process.env.PORT || 3000;
 // imported fruits and vegetables
 const fruits = require("./models/fruits")
 const vegetables = require("./models/vegetables")
+
+
 const jsxViewEngine = require('jsx-view-engine');
 
 //  line 10 :app.set('view engine', 'jsx') is one line of code that make app able to use jsx engine
@@ -31,6 +33,13 @@ app.use(express.urlencoded( {extended: false} ) )
 // };
 
   // Index Route
+
+  // UNABLE TO COMPLETE CREATE HOME PAGE FOR ROOT ROUTE
+  // app.get('/', (req, res) => {
+  //   console.log('Index controller');
+  //   res.render("home/Index", { home });
+  // });
+
   app.get('/fruits', (req, res) => {
     console.log('Index controller');
     res.render("fruits/Index", { fruits });

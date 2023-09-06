@@ -17,6 +17,9 @@ class Show extends React.Component {
                 "It is not ready to eat... Cant touch this"
             }
             <img src={ img } alt="" />
+            <nav>
+                    <a href="/vegetables">Back to Vegetables Index Page</a>
+            </nav>
             </div>
         );
      }
