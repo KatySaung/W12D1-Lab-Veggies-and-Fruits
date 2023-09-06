@@ -1,14 +1,10 @@
 const express = require('express');
 const app = express( );
 const PORT = process.env.PORT || 3000;
-// imported fruits 
+// imported fruits and vegetables
 const fruits = require("./models/fruits")
 const vegetables = require("./models/vegetables")
 const jsxViewEngine = require('jsx-view-engine');
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////NEED TO STILL CREATE GITHUB REPO!(Multiple parts to assignment/////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //  line 10 :app.set('view engine', 'jsx') is one line of code that make app able to use jsx engine
 app.set('view engine', 'jsx')
@@ -41,17 +37,23 @@ app.use(express.urlencoded( {extended: false} ) )
   });
   
   app.get('/vegetables', (req, res) => {
+    console.log('Index controller');
     res.render("vegetables/Index", {vegetables});
   });
 
 // New Route
 // in app.get, the path needs to be in lowercase.
 // in res.render, New needs to be capitalized b/c referencing a file
+// the new route is to gather the user's input
 app.get("/fruits/new", (req,res) => {
   console.log('New controller');
   res.render("fruits/New");
 })
 
+app.get("/vegetables/new", (req,res) => {
+  console.log('New controller');
+  res.render("vegetables/New");
+})
 // Delete Route
 
 
@@ -61,6 +63,7 @@ app.get("/fruits/new", (req,res) => {
 
 
 // Create Route
+// the create route is to create the info
 app.post("/fruits", (req, res)=> {
 //   if(req.body.readyToEat === 'on'){ //if checked, req.body.readyToEat is set to 'on'
 //     req.body.readyToEat = true; //do some data correction
@@ -81,6 +84,13 @@ console.log(fruits);
   res.redirect('/fruits');
 });
 
+// create route for vegetables and redirect to '/vegetables' after form is filled
+app.post("/vegetables", (req, res)=> {
+  req.body.readyToEat = req.body.readyToEat === "on"; 
+  vegetables.push(req.body);
+  console.log(vegetables);
+  res.redirect('/vegetables');
+});
 
 // Edit Route
 
