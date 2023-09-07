@@ -8,11 +8,13 @@ class Index extends React.Component {
                 <h1>Vegetables Index Page</h1>
                 <ul>
                     {
+                        vegetables &&
                         vegetables.map((vegetable, i) =>{
                             return (
                                 <li>
                                     The{' '}
-                                      <a href={`/vegetables/${ i }`}>
+                                    {/*changed the id to how it is in Mongo with underscore vegetable_id  */}
+                                      <a href={`/vegetables/${ vegetable._id }`}>
                                           {vegetable.name}
                                       </a>
                                       {'  '}

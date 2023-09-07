@@ -16,7 +16,8 @@ class Index extends React.Component {
                                 // need to create a key in the li. or will have error.
                                 <li key={ i }>
                                     The{' '}
-                                      <a href={`/fruits/${ i }`}>
+                                    {/* changed the id to how it is in Mongo with underscore fruit_id */}
+                                      <a href={`/fruits/${ fruit._id }`}>
                                           {fruit.name}
                                       </a>
                                       {'  '}

@@ -1,10 +1,24 @@
+require("dotenv").config( );
 const express = require('express');
 const app = express( );
 const PORT = process.env.PORT || 3000;
 // imported fruits and vegetables
-const fruits = require("./models/fruits")
-const vegetables = require("./models/vegetables")
+const Fruit = require("./models/fruit");
+const Vegetable = require("./models/vegetable");
+const mongoose = require("mongoose");
 
+
+
+////Database Connection
+mongoose.connect(process.env.MONGO_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+
+mongoose.connection.once("open", ( ) =>{
+  console.log("connected to mongo");
+});
+/////////////////////////////////
 
 const jsxViewEngine = require('jsx-view-engine');
 
@@ -33,35 +47,44 @@ app.use(express.urlencoded( {extended: false} ) )
 // };
 
   // Index Route
+  // Part2: MongoDB 
 
-  // UNABLE TO COMPLETE CREATE HOME PAGE FOR ROOT ROUTE
-  // app.get('/', (req, res) => {
-  //   console.log('Index controller');
-  //   res.render("home/Index", { home });
-  // });
+  app.get('/fruits', async (req, res) => {
+    try {
 
-  app.get('/fruits', (req, res) => {
-    console.log('Index controller');
-    res.render("fruits/Index", { fruits });
+      // leaving find object empty to find all objects. If need to filter search than need to put something there.
+      const foundFruits = await Fruit.find({ })
+      res.status(200).render('fruits/Index', {
+        fruits: foundFruits,
+      });
+    } catch (err) {
+      res.status(400).send(err)
+    }
   });
   
-  app.get('/vegetables', (req, res) => {
-    console.log('Index controller');
-    res.render("vegetables/Index", {vegetables});
+
+  app.get('/vegetables', async (req, res) => {
+    try {
+      // leave object field empty b/c want to find all veggies
+      const foundVegetables = await Vegetable.find({ })
+      res.status(200).render('vegetables/Index', {
+        vegetables:foundVegetables,
+      });
+    } catch (err){
+      res.status(400).send(err)
+    }
   });
 
 // New Route
-// in app.get, the path needs to be in lowercase.
-// in res.render, New needs to be capitalized b/c referencing a file
-// the new route is to gather the user's input
+// Part 2:MongoDB
 app.get("/fruits/new", (req,res) => {
   console.log('New controller');
-  res.render("fruits/New");
+  res.render("Fruits/New");
 })
 
 app.get("/vegetables/new", (req,res) => {
   console.log('New controller');
-  res.render("vegetables/New");
+  res.render("Vegetables/New");
 })
 // Delete Route
 
@@ -72,32 +95,27 @@ app.get("/vegetables/new", (req,res) => {
 
 
 // Create Route
-// the create route is to create the info
-app.post("/fruits", (req, res)=> {
-//   if(req.body.readyToEat === 'on'){ //if checked, req.body.readyToEat is set to 'on'
-//     req.body.readyToEat = true; //do some data correction
-// } else { //if not checked, req.body.readyToEat is undefined
-//     req.body.readyToEat = false; //do some data correction
-// }
-
-// below condition does not need an if statement because it will already return a true or false. b/c this expression itself will always take the truth or false value and set it equal to eat. Ex this expression("off"==="on") will console log to true.
-req.body.readyToEat = req.body.readyToEat === "on"; 
-fruits.push(req.body);
-console.log(fruits);
-  // sent from client, will be in the request object of body in this function
-  // console.log('Create Controller');
-  // we can access req.body because of the middleware creating req object.So can now see the console log in VS for req.body
-  // console.log(req.body)
-
-  // we are redirecting the user back to the fruits index page to let user know their submitted form works.
+// Part 2: MongoDB
+app.post("/fruits", async (req, res)=> {
+  try {
+    req.body.readyToEat = req.body.readyToEat === "on"; 
+    const createdFruit = await Fruit.create(req.body )
+    res.status(201).send(createdFruit);
+  }   catch (err){
+    res.status(400).send(err)   //send back the 400 error that we catched   
+  }
   res.redirect('/fruits');
 });
 
-// create route for vegetables and redirect to '/vegetables' after form is filled
-app.post("/vegetables", (req, res)=> {
-  req.body.readyToEat = req.body.readyToEat === "on"; 
-  vegetables.push(req.body);
-  console.log(vegetables);
+
+app.post("/vegetables", async (req, res)=> {
+  try {
+    req.body.readyToEat = req.body.readyToEat === "on"; 
+    const createdVegetable = await Vegetable.create(req.body)
+    res.status(201).send(createdVegetable);
+  } catch(err) {
+    res.status(400).send(err)
+  } 
   res.redirect('/vegetables');
 });
 
@@ -106,21 +124,29 @@ app.post("/vegetables", (req, res)=> {
 
 
   //Show Route
-  /* fruit singular because show route only show 1
-   user id  in req.params.id to access fruits array
-   second param of the render method must be an object. The res.render for Show gives rendering so fruits.js can be imported from models folder.*/
-  app.get('/fruits/:id', (req, res) => {
-    res.render('fruits/Show', {
-      // this is passing the props on the server.js side.(server side rendering)Now go to veiws folder react Show.jsx to access props
-       //there will be a variable available inside the jsx file called fruit, its value is fruits[req.params.indexOfFruitsArray]   
-      fruit: fruits[req.params.id]
-    });
+  // Part2: MongoDB
+  
+  app.get('/fruits/:id', async (req, res) => {
+    try {
+      const foundFruit = await Fruit.findById(req.params.id)
+      res.render('fruits/Show', {
+        fruit: foundFruit
+      });
+    }catch(err){
+      res.status(400).send(err)
+    }
   });
 
-  app.get('/vegetables/:id', (req, res) => {
-    res.render("vegetables/Show", {
-      vegetable:vegetables[req.params.id]
-    });
+
+  app.get('/vegetables/:id', async (req, res) => {
+    try {
+      const foundVegetable = await Vegetable.findById(req.params.id)
+      res.render("vegetables/Show", {
+        vegetable:foundVegetable
+      });
+    } catch (err){
+      res.status(400).send(err)
+    }
   });
 
 
