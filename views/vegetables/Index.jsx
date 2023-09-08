@@ -11,7 +11,7 @@ class Index extends React.Component {
                         vegetables &&
                         vegetables.map((vegetable, i) =>{
                             return (
-                                <li>
+                                <li key={ i }>
                                     The{' '}
                                     {/*changed the id to how it is in Mongo with underscore vegetable_id  */}
                                       <a href={`/vegetables/${ vegetable._id }`}>

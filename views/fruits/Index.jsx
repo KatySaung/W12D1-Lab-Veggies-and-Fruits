@@ -11,6 +11,7 @@ class Index extends React.Component {
                 </nav>
                 <ul>
                     {
+                        fruits &&
                         fruits.map((fruit, i) =>{
                             return (
                                 // need to create a key in the li. or will have error.
