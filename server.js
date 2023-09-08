@@ -100,11 +100,10 @@ app.post("/fruits", async (req, res)=> {
   try {
     req.body.readyToEat = req.body.readyToEat === "on"; 
     const createdFruit = await Fruit.create(req.body )
-    res.status(201).send(createdFruit);
+    res.status(201).redirect('/fruits');
   }   catch (err){
     res.status(400).send(err)   //send back the 400 error that we catched   
   }
-  res.redirect('/fruits');
 });
 
 
@@ -112,11 +111,10 @@ app.post("/vegetables", async (req, res)=> {
   try {
     req.body.readyToEat = req.body.readyToEat === "on"; 
     const createdVegetable = await Vegetable.create(req.body)
-    res.status(201).send(createdVegetable);
+    res.status(201).redirect('/vegetables');
   } catch(err) {
     res.status(400).send(err)
   } 
-  res.redirect('/vegetables');
 });
 
 // Edit Route
